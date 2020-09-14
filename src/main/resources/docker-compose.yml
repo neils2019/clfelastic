@@ -1,0 +1,29 @@
+---
+version: '2'
+services:
+  elasticsearch_clf:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.7.0
+    container_name: elasticsearch_clf
+    ports:
+      - 9200:9200
+    environment:
+      xpack.security.enabled: "false"
+      discovery.type: "single-node"
+      ES_JAVA_OPTS: "-Xms1g -Xmx1g"
+    volumes: 
+      - ./data/container_data/elasticsearch:/usr/share/elasticsearch/data
+
+  kibana_clf:
+    image: docker.elastic.co/kibana/kibana:6.7.0
+    container_name: kibana_clf
+    depends_on:
+      - elasticsearch_clf
+    ports:
+      - 5601:5601
+    environment:
+      xpack.security.enabled: "false"
+      discovery.type: "single-node"
+      ELASTICSEARCH_URL: http://elasticsearch_clf:9200
+      ELASTICSEARCH_HOSTS: http://elasticsearch_clf:9200
+      
+
